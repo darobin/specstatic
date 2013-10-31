@@ -1,0 +1,17 @@
+
+div.specstatic-append {
+    display:    inline-block;
+}
+
+a.specstatic-anchorlink {
+    color:  #5c829d;
+    padding:    0 0.5em;
+    text-decoration:    none;
+    font-size:  0.7em;
+    vertical-align: middle;
+}
+
+a.specstatic-anchorlink:hover {
+    color:  #f5c689;
+    background: none;
+}

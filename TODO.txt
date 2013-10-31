@@ -3,7 +3,7 @@ FEATURES:
     - new take on bug-assist (should ideally also know how to handle GitHub issues)
     - make headers linkable (possibly all ID linkable, though differently)
     - make dfn point to the using locations
-    - make refs link back to instances
+    - make bibrefs link back to instances
     - inject readability style
         - max width
         - more compact header
