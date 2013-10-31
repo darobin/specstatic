@@ -1,8 +1,13 @@
 
 FEATURES:
     - new take on bug-assist (should ideally also know how to handle GitHub issues)
-    - make headers linkable (possibly all ID linkable, though differently)
+    ✓ make headers linkable (possibly all ID linkable, though differently)
     - make dfn point to the using locations
+        - on click, make a pop up featuring:
+            - #id-link to dfn
+            - list of sections in which refs appear
+            - for each section, list of occurrences linked back
+            - if no uses, "No references"
     - make bibrefs link back to instances
     - inject readability style
         - max width

@@ -3,6 +3,14 @@ div.specstatic-append {
     display:    inline-block;
 }
 
+div.specstatic-absolute {
+    position:   absolute;
+    background: #fff;
+    border: 1px solid #5c829d;
+    box-shadow: 2px 2px 1px 1px #f5c689;
+    padding:    0.5em;
+}
+
 a.specstatic-anchorlink {
     color:  #5c829d;
     padding:    0 0.5em;
