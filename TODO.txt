@@ -4,3 +4,9 @@ FEATURES:
     - make headers linkable (possibly all ID linkable, though differently)
     - make dfn point to the using locations
     - make refs link back to instances
+    - inject readability style
+        - max width
+        - more compact header
+        - clearer indication of status
+        - hidden (expandable) SotD
+        - save preference to cookie
