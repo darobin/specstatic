@@ -1,0 +1,11 @@
+{
+    "name":     "specstatic"
+,   "version":  "0.0.1"
+,   "license": "MIT"
+,   "dependencies": {
+    }
+,   "devDependencies": {
+        "grunt":                "0.4.1"
+    ,   "grunt-contrib-uglify": "0.2.5"
+    }
+}
