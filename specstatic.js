@@ -17,8 +17,23 @@
             if (names.indexOf(ref.parentNode.tagName.toLowerCase()) > -1) {
                 if (onlyFirst) return ref.parentNode;
                 res.push(ref.parentNode);
-                ref = ref.parentNode;
             }
+            ref = ref.parentNode;
+        }
+        return onlyFirst ? null : res;
+    }
+    
+    // this looks up previous siblings and the previous siblings of ancestors
+    function precedingAncestry (ref, names, onlyFirst) {
+        var res = [];
+        ref = ref.previousElementSibling ? ref.previousElementSibling : ref.parentNode;
+        if (typeof names === "string") names = [names];
+        while (ref && ref.nodeType === 1) {
+            if (names.indexOf(ref.parentNode.tagName.toLowerCase()) > -1) {
+                if (onlyFirst) return ref;
+                res.push(ref);
+            }
+            ref = ref.previousElementSibling ? ref.previousElementSibling : ref.parentNode;
         }
         return onlyFirst ? null : res;
     }
@@ -38,20 +53,12 @@
         ,   pos = options.position
         ;
         el.classList.add("specstatic-tooltip");
+        el.classList.add("removeOnSave"); // for ReSpec
+        if (options.hover) el.classList.add("specstatic-menu");
         el.innerHTML = options.content;
         if (pos === "append") {
             el.classList.add("specstatic-append");
             options.target.appendChild(el);
-        }
-        else if (pos === "pointer") {
-            var x = options.event.clientX - 10
-            ,   y = options.event.clientY - 10
-            ;
-            el.classList.add("specstatic-absolute");
-            el.style.top = x + "px";
-            el.style.left = y + "px";
-            el.style.width = (options.width || 150) + "px";
-            document.body.appendChild(el);
         }
         return el;
     }
@@ -107,52 +114,86 @@
             // <dfn>
             else if (elName === "dfn") {
                 el.addEventListener("click", function (ev) {
+                    ev.stopPropagation();
+                    if (toolTipPanel) {
+                        clearToolTip(toolTipPanel);
+                        toolTipPanel = null;
+                        return;
+                    }
                     var content;
                     if (ev.target.specstaticContent) {
                         content = ev.target.specstaticContent;
                     }
                     else {
                         var id = ev.target.getAttribute("id")
-                        ,   content = "<p style='font-weight: bold'><a href='#" + id + "'>#" + id + "</a></p>"
+                        ,   content = "<p><a href='#" + id + "'>#" + id + "</a></p>\n"
                         ,   refs = document.querySelectorAll("a[href='#" + id + "']")
                         ;
                         if (refs.length) {
-                            var secs = {};
+                            var dfnData = {};
                             for (var j = 0, m = refs.length; j < m; j++) {
-                                var ref = refs[j];
+                                var ref = refs[j]
+                                ,   backref = generateID(ref)
+                                ,   gid
+                                ,   h
+                                ;
                                 if (usesSections) {
-                                    // XXX in here
-                                    var sec = ancestor(ref, "section", true)
-                                    ,   gid = generateID(sec)
-                                    ;
-                                    // find ancestor section element
-                                    // give it ID if it doesn't have one
-                                    // get title
+                                    var sec = ancestors(ref, "section", true);
+                                    h = sec.firstElementChild;
+                                    gid = generateID(sec);
                                 }
                                 else {
-                                    // find preceding hN element
-                                    // give it ID if it doesn't have one
-                                    // get title
+                                    h = precedingAncestry(ref, "h2 h3 h4 h5 h6".split(" "), true);
+                                    gid = generateID(h);
                                 }
-                                
+                                if (!dfnData[gid]) {
+                                    if (/^h[2-6]$/i.test(h.tagName)) {
+                                        dfnData[gid] = {
+                                            title:  h.innerHTML.replace(/<(\/)?a\b/gi, "<$1span")
+                                        ,   id:     gid
+                                        ,   refs:   [backref]
+                                        };
+                                    }
+                                }
+                                else {
+                                    dfnData[gid].refs.push(backref);
+                                }
                             }
+                            content += "<p>Referenced in:</p>\n<ul>\n";
+                            for (var k in dfnData) {
+                                if (dfnData.hasOwnProperty(k)) {
+                                    var sec = dfnData[k]
+                                    ,   refList = []
+                                    ;
+                                    for (var o = 0, p = sec.refs.length; o < p; o++) {
+                                        refList.push("<a href='#" + sec.refs[o] + "'>" + (o + 1) + "</a>");
+                                    }
+                                    content += "<li><a href='#" + sec.id + "'>" + sec.title +
+                                               "</a> <span class='specstatic-refs'>" + refList.join(", ") + "</span></li>";
+                                }
+                            }
+                            content += "</ul>\n";
                         }
                         else {
-                            content += "<p>No references.</p>";
+                            content += "<p>No references.</p>\n";
                         }
+                        console.log("got", id, content, refs);
+
                         ev.target.specstaticContent = content;
                     }
                     toolTipPanel = toolTip({
-                        position:   "pointer"
-                    ,   event:      ev
+                        target:     ev.target
+                    ,   position:   "append"
                     ,   content:    content
-                    ,   width:      200
+                    ,   hover:      true
                     });
+                    console.log("toolTipPanel", toolTipPanel);
                 });
             }
         }
         document.body.addEventListener("click", function () {
             if (toolTipPanel) clearToolTip(toolTipPanel);
+            toolTipPanel = null;
         });
         
     }

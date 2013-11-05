@@ -3,12 +3,45 @@ div.specstatic-append {
     display:    inline-block;
 }
 
-div.specstatic-absolute {
+div.specstatic-append.specstatic-menu {
     position:   absolute;
-    background: #fff;
+    display:    block;
+    background: #fafaff;
+    z-index:    10;
     border: 1px solid #5c829d;
-    box-shadow: 2px 2px 1px 1px #f5c689;
+    box-shadow: 2px 2px 2px 1px #5c829d;
     padding:    0.5em;
+    min-width:  250px;
+    max-width:  350px;
+    width:  auto;
+    padding-top:    0;
+    font-size:  small;
+    font-weight:    normal;
+    font-style: normal;
+}
+
+div.specstatic-menu p {
+    font-weight:    bold;
+}
+
+div.specstatic-menu p:first-of-type {
+    margin-top: 8px;
+}
+
+div.specstatic-menu ul {
+    padding-left:    1em;
+}
+
+div.specstatic-menu a {
+    text-decoration:    none;
+}
+
+.specstatic-refs {
+    margin-left:    1em;
+}
+
+.specstatic-refs a {
+    font-weight:    bold;
 }
 
 a.specstatic-anchorlink {
@@ -22,4 +55,10 @@ a.specstatic-anchorlink {
 a.specstatic-anchorlink:hover {
     color:  #f5c689;
     background: none;
+}
+
+dfn[id] {
+    cursor: pointer;
+    position:   relative;
+    display:    inline-block;
 }
