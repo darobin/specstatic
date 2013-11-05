@@ -177,7 +177,6 @@
                         else {
                             content += "<p>No references.</p>\n";
                         }
-                        console.log("got", id, content, refs);
 
                         ev.target.specstaticContent = content;
                     }
@@ -187,7 +186,6 @@
                     ,   content:    content
                     ,   hover:      true
                     });
-                    console.log("toolTipPanel", toolTipPanel);
                 });
             }
         }
